@@ -1,0 +1,11 @@
+# 3D overrides: each epoch is far heavier, so fewer of them.
+# Use alongside your own paths, e.g. `--config configs/3d.yaml --xray ... --neutron ... --seg ...`
+
+train:
+  num_epochs: 20
+  repeat:     50
+  patch_size: [128, 128, 128]
+
+meta:
+  epochs: 20
+  repeat: 200

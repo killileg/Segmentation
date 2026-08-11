@@ -1,0 +1,51 @@
+# Example configuration. Copy this, point the paths at your own data, and pass it with
+# `--config my_config.yaml`. Anything omitted falls back to the defaults in msfusion/config.py;
+# CLI flags override this file.
+#
+# The three input volumes have NO defaults -- this repository ships code, not data.
+
+paths:
+  # required: two co-registered image volumes on the same grid
+  xray:        /path/to/your/xray.nii
+  neutron:     /path/to/your/neutron.nii
+  # required: integer label volume, 0 = matrix/background, 1..N = classes
+  seg:         /path/to/your/labels.nii.gz
+  # optional: a second, independently drawn segmentation, exported for comparison but never trained on
+  # neutron_seg: /path/to/your/independent_labels.nii.gz
+
+  final_dir:   ./outputs
+  weights_dir: ./weights
+
+data:
+  # map every non-zero label value in `seg` to a readable name
+  label_names:  {1: dark, 2: medium, 3: bright}
+  # which of those labels to train and score on
+  class_ids:    [1, 2, 3]
+  # `seg` is upsampled by this factor on load; set to 1 if it is already at full resolution
+  seg_zoom:     2
+  # slice range along H where the second modality has usable signal. Narrow this inwards from the
+  # auto-detected extent (printed at start-up) to drop edge artefacts.
+  neutron_h_start: 750
+  neutron_h_end:   1800
+
+split:
+  k_folds:    3
+  fold_index: 0
+  gap:        64   # slices discarded either side of a train/val/test boundary
+
+train:
+  num_epochs: 50
+  lr:         0.001
+  dropout:    0.2
+  batch_size: 4                # 2D only
+  pad_size:   [360, 1456]      # 2D only -- must be >= the in-plane size of your volume
+  patch_size: [128, 128, 128]  # 3D only
+  repeat:     50               # 3D only -- patches drawn per slab per epoch
+  sw_overlap: 0.25
+
+meta:
+  epochs:     20
+  lr:         0.001
+  hidden:     16
+  repeat:     200   # 3D only
+  logit_clip: 10.0

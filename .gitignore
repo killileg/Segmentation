@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# data and outputs never belong in the repo
+*.nii
+*.nii.gz
+*.npz
+*.pth
+outputs/
+results/
+weights/
+final/
+logs/
+*.out
+*.err
+
+.ipynb_checkpoints/
+.DS_Store
+.idea/
+.vscode/
