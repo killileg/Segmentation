@@ -337,8 +337,9 @@ Adam at 1e-3 with cosine annealing and weight decay 1e-5.
 **2D** — slices padded to 360 × 1456, batch size 4, 50 epochs. Augmentation: flips on both axes
 (p=0.5), rotation (p=0.2, ±0.3 rad).
 
-**3D** — 128³ patches, `RandCropByPosNegLabeld` with pos:neg = 2:1 biased towards the ROI, 50
-patches per slab per epoch, 20 epochs. Augmentation: flips on all three axes (p=0.5 per axis).
+**3D** — 128³ patches, `RandCropByPosNegLabeld` with `pos=1, neg=0`, so every crop center is
+sampled from inside the ROI. There are 50 patches per slab per epoch and 20 epochs. Augmentation:
+flips on all three axes (p=0.5 per axis). The same ROI-only sampling is used for meta-learner crops.
 
 **Meta-learner** — 3 conv layers, 16 hidden channels, 20 epochs, logits clamped to ±10.
 

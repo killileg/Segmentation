@@ -1,8 +1,8 @@
 """3D pipeline — volumetric patches cropped from contiguous slabs.
 
 Each train/val/test range becomes one slab held in memory; ``RandCropByPosNegLabeld`` samples
-patches from it, biased towards the ROI. Inference is whole-slab sliding-window on the CPU with
-the GPU used only for the forward pass, which keeps peak memory bounded.
+patch centers exclusively from inside the ROI. Inference is whole-slab sliding-window on the CPU
+with the GPU used only for the forward pass, which keeps peak memory bounded.
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ class Pipeline3D(BasePipeline):
         train_tf = monai.transforms.Compose(
             [
                 monai.transforms.RandCropByPosNegLabeld(
-                    keys=keys, label_key="roi", spatial_size=self.patch, pos=2, neg=1, num_samples=1
+                    keys=keys, label_key="roi", spatial_size=self.patch, pos=1, neg=0, num_samples=1
                 ),
                 monai.transforms.RandFlipd(keys=keys, prob=0.5, spatial_axis=0),
                 monai.transforms.RandFlipd(keys=keys, prob=0.5, spatial_axis=1),
@@ -200,7 +200,7 @@ class Pipeline3D(BasePipeline):
         transform = monai.transforms.Compose(
             [
                 monai.transforms.RandCropByPosNegLabeld(
-                    keys=keys, label_key="roi", spatial_size=self.patch, pos=2, neg=1, num_samples=1
+                    keys=keys, label_key="roi", spatial_size=self.patch, pos=1, neg=0, num_samples=1
                 ),
                 monai.transforms.RandFlipd(keys=keys, prob=0.5, spatial_axis=0),
                 monai.transforms.RandFlipd(keys=keys, prob=0.5, spatial_axis=1),
